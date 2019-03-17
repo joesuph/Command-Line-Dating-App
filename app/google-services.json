@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "156251631097",
+    "firebase_url": "https://smoochie-e31bd.firebaseio.com",
+    "project_id": "smoochie-e31bd",
+    "storage_bucket": "smoochie-e31bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156251631097:android:58868709ffc52f7a",
+        "android_client_info": {
+          "package_name": "com.example.finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156251631097-nbjno1o40s9vc22jfloe6jten3hsvnit.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB94upEfZspI2U1xpGR2k_63Fx6SFJqDc8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
