@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,11 +30,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -51,10 +60,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system. firebase
      */
+
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
     private DocumentReference userDocRef;
+    private String userId;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -306,28 +317,62 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
+            final Boolean accountExists = false;
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;
             }
+            DocumentReference emailCheck = FirebaseFirestore.getInstance().document("Emails/joseph.olsen98@gmail.com"); //+  mEmail);
 
-
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            Task<DocumentSnapshot> task = emailCheck.get();
+            DocumentSnapshot email = null;
+            try {
+                email = Tasks.await(task);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            if (email.exists())
+            {
+                System.out.println("Login Man: Email exists");
+                userDocRef = FirebaseFirestore.getInstance().document("emails_passwords/" + mEmail + "_" + mPassword);
+                Task<DocumentSnapshot> task1 = userDocRef.get();
+                DocumentSnapshot userDocSnap = null;
+                try {
+                    userDocSnap = Tasks.await(task1);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (userDocSnap.exists())
+                {
+                    System.out.println("Login Man: Login Successful");
+                    return true;
+                }
+                else
+                {
+                    System.out.println("Login Man: Incorrect Password");
+                    return false;
+                }
+
+            }
+            else
+            {
+                //Create Profile
+                System.out.println("Login Man: Need to create new Profile");
+            }
+
 
             // TODO: register the new account here. ALEC
             return true;
