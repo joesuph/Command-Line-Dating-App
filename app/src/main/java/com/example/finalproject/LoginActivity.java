@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             "foo@example.com:hello", "bar@example.com:world"
     };
     private DocumentReference userDocRef;
-    private String userId;
+    private String userPrivateId;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -322,17 +322,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-            final Boolean accountExists = false;
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-            DocumentReference emailCheck = FirebaseFirestore.getInstance().document("Emails/joseph.olsen98@gmail.com"); //+  mEmail);
+            // Check if the given email exists by requesting email doc
+            DocumentReference emailCheck = FirebaseFirestore.getInstance().document("Emails/" +  mEmail);
 
+            //Get the format for reading
             Task<DocumentSnapshot> task = emailCheck.get();
+
+            //Wait for task to finish, this process cannot be ignored and
+            //ran asynchronously
             DocumentSnapshot email = null;
             try {
                 email = Tasks.await(task);
@@ -341,11 +338,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            //Check if the email exists as a doc in emails collection on database
             if (email.exists())
             {
+                //Check if password is connected to this email
                 System.out.println("Login Man: Email exists");
+
+                //Get document of user account with this password and username
                 userDocRef = FirebaseFirestore.getInstance().document("emails_passwords/" + mEmail + "_" + mPassword);
                 Task<DocumentSnapshot> task1 = userDocRef.get();
+
+                //Wait for this operation to be complete, do not run asynchronously
                 DocumentSnapshot userDocSnap = null;
                 try {
                     userDocSnap = Tasks.await(task1);
@@ -355,13 +359,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     e.printStackTrace();
                 }
 
+                //check if account with email and password exists
                 if (userDocSnap.exists())
                 {
+                    //correct password for email
                     System.out.println("Login Man: Login Successful");
                     return true;
                 }
                 else
                 {
+                    //incorrect password for email
                     System.out.println("Login Man: Incorrect Password");
                     return false;
                 }
