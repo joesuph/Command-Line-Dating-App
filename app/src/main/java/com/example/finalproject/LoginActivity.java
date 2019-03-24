@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             "foo@example.com:hello", "bar@example.com:world"
     };
     private DocumentReference userDocRef;
-    private String userPrivateId;
+    private DatabaseItems db;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -322,62 +322,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // Check if the given email exists by requesting email doc
-            DocumentReference emailCheck = FirebaseFirestore.getInstance().document("Emails/" +  mEmail);
+            db = new DatabaseItems();
 
-            //Get the format for reading
-            Task<DocumentSnapshot> task = emailCheck.get();
+            if (db.checkEmail(mEmail)){
+                System.out.println("Log man: Email Found");
 
-            //Wait for task to finish, this process cannot be ignored and
-            //ran asynchronously
-            DocumentSnapshot email = null;
-            try {
-                email = Tasks.await(task);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            //Check if the email exists as a doc in emails collection on database
-            if (email.exists())
-            {
-                //Check if password is connected to this email
-                System.out.println("Login Man: Email exists");
-
-                //Get document of user account with this password and username
-                userDocRef = FirebaseFirestore.getInstance().document("emails_passwords/" + mEmail + "_" + mPassword);
-                Task<DocumentSnapshot> task1 = userDocRef.get();
-
-                //Wait for this operation to be complete, do not run asynchronously
-                DocumentSnapshot userDocSnap = null;
-                try {
-                    userDocSnap = Tasks.await(task1);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                //check if account with email and password exists
-                if (userDocSnap.exists())
-                {
-                    //correct password for email
-                    System.out.println("Login Man: Login Successful");
+                if (db.getAccountInfo(mEmail, mPassword)){
+                    db.getMatches();
+                    System.out.println("Log man: password matched");
                     return true;
                 }
-                else
-                {
-                    //incorrect password for email
-                    System.out.println("Login Man: Incorrect Password");
+                else{
+                    System.out.println("Log man: Password does not match");
                     return false;
                 }
-
             }
-            else
-            {
-                //Create Profile
-                System.out.println("Login Man: Need to create new Profile");
+            else{
+                System.out.println("Log man: Email not found, please create account");
             }
 
 
