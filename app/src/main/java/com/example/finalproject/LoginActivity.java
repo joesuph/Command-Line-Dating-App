@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +30,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -48,9 +60,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system. firebase
      */
+
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private DocumentReference userDocRef;
+    private DatabaseItems db;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -302,26 +317,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            db = new DatabaseItems();
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            if (db.checkEmail(mEmail)){
+                System.out.println("Log man: Email Found");
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                if (db.getAccountInfo(mEmail, mPassword)){
+                    db.getMatches();
+                    System.out.println("Log man: password matched");
+                    return true;
+                }
+                else{
+                    System.out.println("Log man: Password does not match");
+                    return false;
                 }
             }
+            else{
+                System.out.println("Log man: Email not found, please create account");
+            }
+
 
             // TODO: register the new account here. ALEC
             return true;
