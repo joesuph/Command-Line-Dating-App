@@ -3,6 +3,7 @@ package com.example.finalproject;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -60,11 +61,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system. firebase
      */
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    private DocumentReference userDocRef;
     private DatabaseItems db;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -309,8 +305,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        public final String mEmail;
+        public final String mPassword;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -341,7 +337,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
             // TODO: register the new account here. ALEC
-            String newCredential = mEmail + ":" + mPassword;
+            String newCredential = mEmail + "_" + mPassword;
+            //NEW ACTIVITY
+
             //Store through Joseph's DB Connection
             return true;
         }
@@ -352,7 +350,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                sendMessage(mEmail, mPassword);
+                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
@@ -364,6 +363,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    public static final String EXTRA_MESSAGE = "com.example.finalproject.MESSAGE";
+
+    public void sendMessage(String email, String password) {
+        Intent intent = new Intent(this, MainActivity.class);
+        String message = email + "_" + password;
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 }
 
