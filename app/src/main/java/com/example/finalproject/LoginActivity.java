@@ -369,7 +369,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void sendMessage(String email, String password) {
         Intent intent = new Intent(this, MainActivity.class);
-        String message = email + "_" + password;
+        String message = email + ":" + password;
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
