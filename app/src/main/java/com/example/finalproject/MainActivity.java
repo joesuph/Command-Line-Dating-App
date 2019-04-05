@@ -26,20 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         GetAccountInfoTask task = new GetAccountInfoTask(email, password, dbit, this);
         task.execute((Void) null);
-        /*
-        //Works until here! Crashes due to threading issue
-        dbit.getAccountInfo(email, password);
-        System.out.println("8");
-        profiles = dbit.getProfiles();
-        System.out.println("9");
-        Map<String, Object> person = profiles.get(0);
-        System.out.println("10");
-        Object name = person.get("name");
-        System.out.println("11");
-        TextView textview = findViewById(R.id.Name);
-        System.out.println("12");
-        textview.setText((String) name);
-        */
     }
 
 

@@ -23,7 +23,7 @@ public class GetProfilesTask extends AsyncTask<Void, Void, ArrayList<Map<String,
 
     @Override
     protected void onPostExecute(final ArrayList<Map<String, Object>> profiles) {
-        System.out.println("Her name is :" + profiles.get(0).get("name"));
+        ma.profiles = profiles;
         TextView tv = ma.findViewById(R.id.Name);
         tv.setText((String) profiles.get(0).get("name"));
 
