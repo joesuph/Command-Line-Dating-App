@@ -46,18 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textview2"
-                style = "@style/terminalTextView"
-                android:text="Example"
-                />
-
-            <TextView
-                android:id="@+id/textview1"
-                style = "@style/terminalTextView"
-                android:text="Example"
-                />
-
             <EditText
                 android:id="@+id/editText"
                 style = "@style/terminalEditText"
@@ -69,9 +57,11 @@
         android:id="@+id/textView3"
         android:layout_width="348dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginBottom="56dp"
         android:text='For options and directions on console dating, please type "help" and press enter.'
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="29dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
