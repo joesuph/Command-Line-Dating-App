@@ -58,17 +58,23 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            args.split(" ");
-            switch(args)
+            String commands[] = args.split(" ");
+            switch(commands[0])
             {
-                case "":
-                    result = "";
-                    break;
                 case "help":
-                    result += "\n\t\t>>Type \"cat profiles.json\" to see profiles";
-                    result += "\n\t\t>>Type \"ping <userid>\" to like a user";
-                    result += "\n\t\t>>Type \"grep 'likesMe' profiles.json\" to see who you liked you back";
+                    result += "\n\t\t>>Type \"cat profiles.json\" to view profiles ";
+                    result += "\n\t\t>>Type \"ping <userid>\" to like a user (Test connection)";
+                    result += "\n\t\t>>Type \"grep 'Ping Success' profiles.json\" to see who liked you back";
                     break;
+                case "ping":
+                    LikeProfileTask lpt = new LikeProfileTask(this,commands[1]);
+                    lpt.execute((Void) null );
+                    return;
+                case "grep":
+                    GetMatchesTask gmt = new GetMatchesTask(this);
+                    gmt.execute((Void) null);
+                    return;
+
             }
             updateUI(args,result);
         }

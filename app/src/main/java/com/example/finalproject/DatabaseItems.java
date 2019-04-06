@@ -188,7 +188,8 @@ public class DatabaseItems {
             a = likesList;
         else
             a = new ArrayList<Long>();
-        a.add(likedId);
+        if (!a.contains(likedId))
+            a.add(likedId);
         db.document("matches/" + userId.toString()).update("likes",a);
     }
 
@@ -261,7 +262,8 @@ public class DatabaseItems {
         else
             d = new ArrayList<Long>();
 
-
+        if (a.contains(likedUserId))
+            return;
         a.add(likedUserId);
         b.add(userId);
         c.add(likedUserId);
@@ -273,7 +275,7 @@ public class DatabaseItems {
 
     }
 
-    public ArrayList getMatches(){
+    public ArrayList<Map<String,Object>> getMatches(){
         ArrayList<Map<String,Object>> a = new ArrayList<Map<String,Object>>();
         Task<DocumentSnapshot> task = db.document("matches/" + userId.toString()).get();
         DocumentSnapshot matchSnap = null;

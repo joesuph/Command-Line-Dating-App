@@ -317,7 +317,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             db = new DatabaseItems();
-
+            
             if (db.checkEmail(mEmail)){
                 System.out.println("Log man: Email Found");
 
