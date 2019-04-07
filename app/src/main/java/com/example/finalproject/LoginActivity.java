@@ -338,7 +338,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             //NEW ACTIVITY
 
             //Store through Joseph's DB Connection
-            return true;
+            return false;
         }
 
         @Override
@@ -353,6 +353,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
+
         }
 
         @Override
