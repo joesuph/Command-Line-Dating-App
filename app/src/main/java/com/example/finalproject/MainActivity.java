@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     DatabaseItems dbit = new DatabaseItems();
     ArrayList<Map<String, Object>> profiles;
 
+    /****
+     * Get's profiles ready to display when called
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
         GetAccountInfoTask task = new GetAccountInfoTask(email, password, dbit, this);
         task.execute((Void) null);
 
-        //When the user clicks enter after typing in console
+        //Event handler for when the user clicks enter.
         final EditText edittext = (EditText) findViewById(R.id.editText);
         edittext.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
+                    // Perform process text on key press
                     process(edittext.getText().toString());
                     return true;
                 }
@@ -50,7 +53,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-        public void process(String args) {
+
+    /**
+     * @param args
+     * Decide what text to display. depending on the arguments type
+     */
+    public void process(String args) {
             String result = "";
 
             if(args.equals("cat profiles.json")){
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            //Separate object from command to determine process
             String commands[] = args.split(" ");
             switch(commands[0])
             {
@@ -78,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             }
             updateUI(args,result);
         }
-
+        //Manages getProfiles process
         public void getProfiles(){
             String result = "\n\t{";
             for (Map<String,Object> p : profiles){
@@ -92,7 +101,13 @@ public class MainActivity extends AppCompatActivity {
             updateUI("cat profiles.json",result);
         }
 
-        public void updateUI(String input, String result){
+    /**
+     *
+     * @param input
+     * @param result
+     * Manages Updating console.
+     */
+    public void updateUI(String input, String result){
             LinearLayout llviews = (LinearLayout) findViewById(R.id.linear_layout);
             TextView tvText = new TextView(new ContextThemeWrapper(this, R.style.terminalTextView), null, 0);
 
@@ -114,10 +129,5 @@ public class MainActivity extends AppCompatActivity {
             et.setFocusableInTouchMode(true);
             et.requestFocus();
         }
-
-
-
-
-
 
 }
