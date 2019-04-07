@@ -57,10 +57,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system. firebase
-     */
+    //holds all data base information
     private DatabaseItems db;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -317,7 +314,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             db = new DatabaseItems();
-
+            
             if (db.checkEmail(mEmail)){
                 System.out.println("Log man: Email Found");
 
@@ -369,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void sendMessage(String email, String password) {
         Intent intent = new Intent(this, MainActivity.class);
-        String message = email + "_" + password;
+        String message = email + ":" + password;
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
